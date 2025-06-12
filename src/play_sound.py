@@ -2,19 +2,24 @@ import serial
 from playsound import playsound
 
 
-# Map color names to sound file paths 
+# Map color names & event flags to sound file paths 
 color_sounds = {
-    "Red": "media/red.mp3",
-    "Orange": "media/orange.mp3",
-    "Yellow": "media/yellow.mp3",
-    "Green": "media/green.mp3",
-    "Cyan": "media/cyan.mp3",
-    "Blue": "media/blue.mp3",
-    "Purple": "media/purple.mp3",
-    "Magenta": "media/magenta.mp3",
-    "Black": "media/black.mp3",
-    "White": "media/white.mp3",
-    "Gray": "media/gray.mp3",
+    "red": "media/darth-vader.mp3",
+    "orange": "media/obi-wan.mp3",
+    "yellow": "media/jar-jar.mp3",
+    "green": "media/yoda.mp3",
+    "cyan": "media/x-wing.mp3",
+    "blue": "media/luke-skywalker.mp3",
+    "purple": "media/WEEEEEOW.mp3",
+    "magenta": "media/tie-fighter.mp3",
+    "black": "media/tie-fighter.mp3",
+    "white": "media/x-wing.mp3",
+    "gray": "media/r2d2.mp3",
+}
+
+event_sounds = {
+    "activated": "media/lightspeed.mp3",
+    "deactivated": "media/c3po.mp3",
 }
 
 
@@ -25,19 +30,25 @@ def main():
     while True:
         line = ser.readline().decode('utf-8').strip()
         print("Received from serial:", line)
+        
+        sound_file = None
+        source = None
 
         if line.startswith("Play COLOR:"):
-            color = line.split("Play COLOR:")[1]
+            color = line.split("Play COLOR:")[1].strip().lower()
+            sound_file = color_sounds.get(color)
+            source = f"color '{color}'"
 
-            sound_file = "media/WEEEEEOW.mp3"
+        elif line.startswith("Play EVENT:"):
+            event = line.split("Play EVENT:")[1].strip().lower()
+            sound_file = event_sounds.get(event)
+            source = f"event '{event}'"
 
-            # sound_file = color_sounds.get(color)
-
-            if sound_file:
-                print(f"Playing sound for {color}")
-                playsound(sound_file)
-            else:
-                print(f"No sound mapped for color: {color}")
+        if sound_file:
+            print(f"Playing sound for {source}: {sound_file}")
+            playsound(sound_file)
+        else:
+            print(f"No sound mapped for {source}")
 
 
 if __name__ == "__main__":

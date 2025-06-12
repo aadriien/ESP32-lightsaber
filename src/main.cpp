@@ -66,10 +66,6 @@ void loop() {
             if (getColorFromJoystick(joyX, joyY, newColor)) {
                 currentColor = newColor;
                 // Serial.println("Color updated");
-
-                // Print basic color name for sound triggers
-                Serial.print("Play COLOR: ");
-                Serial.println(getNuancedColorName(currentColor));
             }
         }
 
@@ -198,6 +194,10 @@ void checkClicked(int joyX, int joyY) {
 
     if (lastButtonState == HIGH && currentButtonState == LOW) {
         if (!isActivated) {
+            // Trigger sound on activation
+            Serial.println("Play EVENT: activated");
+            delay(1000);
+
             // Turn on lightsaber
             activateLightsaber(currentColor);
             isActivated = true;
@@ -212,10 +212,18 @@ void checkClicked(int joyX, int joyY) {
                 colorLocked = !colorLocked;
                 
                 Serial.println(colorLocked ? "Color locked!" : "Color unlocked!");
-                if (colorLocked) printColor(currentColor);
-                
+                if (colorLocked) {
+                    printColor(currentColor);
+
+                    // Print basic color name for sound triggers
+                    Serial.print("Play COLOR: ");
+                    Serial.println(getNuancedColorName(currentColor));
+                }
             } 
             else {
+                // Trigger sound on deactivation
+                Serial.println("Play EVENT: deactivated");
+
                 // Otherwise, turn off lightsaber
                 deactivateLightsaber();
                 isActivated = false;
