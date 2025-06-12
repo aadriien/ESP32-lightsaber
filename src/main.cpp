@@ -30,6 +30,8 @@ bool colorLocked = false;
 
 
 void printColor(const CRGB& color);
+float getHueFromRGB(const CRGB& color);
+const char* getNuancedColorName(const CRGB& color);
 bool getColorFromJoystick(int joyX, int joyY, CRGB &outColor);
 bool isJoystickOutsideDeadzone(int joyX, int joyY);
 void checkClicked(int joyX, int joyY);
@@ -63,7 +65,11 @@ void loop() {
             CRGB newColor;
             if (getColorFromJoystick(joyX, joyY, newColor)) {
                 currentColor = newColor;
-                Serial.println("Color updated");
+                // Serial.println("Color updated");
+
+                // Print basic color name for sound triggers
+                Serial.print("Play COLOR: ");
+                Serial.println(getNuancedColorName(currentColor));
             }
         }
 
@@ -83,6 +89,65 @@ void printColor(const CRGB& color) {
     Serial.print(" B: ");
     Serial.println(color.b);
 }
+
+
+float getHueFromRGB(const CRGB& color) {
+    float r = color.r / 255.0;
+    float g = color.g / 255.0;
+    float b = color.b / 255.0;
+
+    float maxVal = max(r, max(g, b));
+    float minVal = min(r, min(g, b));
+    float delta = maxVal - minVal;
+
+    if (delta < 0.00001) return 0;  // gray/white/black (no hue)
+
+    float hue = 0;
+
+    if (maxVal == r) {
+        hue = 60.0 * fmod(((g - b) / delta), 6);
+    } else if (maxVal == g) {
+        hue = 60.0 * (((b - r) / delta) + 2);
+    } else if (maxVal == b) {
+        hue = 60.0 * (((r - g) / delta) + 4);
+    }
+
+    if (hue < 0) hue += 360;
+
+    return hue;
+}
+
+
+const char* getNuancedColorName(const CRGB& color) {
+    float hue = getHueFromRGB(color);
+
+    float saturation = 
+        (float)max(color.r, max(color.g, color.b)) 
+        - 
+        (float)min(color.r, min(color.g, color.b));
+    saturation /= 255.0;
+
+    float brightness = max(color.r, max(color.g, color.b)) / 255.0;
+
+    // Handle black/white/gray first
+    if (brightness < 0.1) return "Black";
+    if (saturation < 0.1 && brightness > 0.9) return "White";
+    if (saturation < 0.1) return "Gray";
+
+    // Hue ranges with more nuance:
+    if (hue >= 0 && hue < 15) return "Red";
+    if (hue >= 15 && hue < 45) return "Orange";
+    if (hue >= 45 && hue < 70) return "Yellow";
+    if (hue >= 70 && hue < 150) return "Green";
+    if (hue >= 150 && hue < 190) return "Cyan";
+    if (hue >= 190 && hue < 260) return "Blue";
+    if (hue >= 260 && hue < 320) return "Purple";
+    if (hue >= 320 && hue < 345) return "Magenta";
+    if (hue >= 345 && hue <= 360) return "Red";
+
+    return "Unknown";
+}
+
 
 
 bool getColorFromJoystick(int joyX, int joyY, CRGB &outColor) {
