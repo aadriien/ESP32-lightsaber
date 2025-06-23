@@ -53,7 +53,7 @@ When you're ready to deactivate the lightsaber, simply click the joystick again 
 
 ## Video Demos
 
-![Video demo of lightsaber activation and color selection](./example-media/lightsaber-activation.gif)
+![Video demo of lightsaber activation and color selection](./example-media/lightsaber-activation-demo.gif)
 
 
 ## Example Images
