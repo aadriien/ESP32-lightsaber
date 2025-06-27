@@ -9,11 +9,11 @@ This project is still a **work in progress**, so please hang tight while I get t
 
 ## How It Works
 
-Start by clicking the joystick. This will activate the lightsaber, with a cool sound effect in the background (lightspeed)! 
+Start by clicking the joystick. This will activate the lightsaber with a cool sound effect (lightspeed)! 
 
 Maneuver the joystick to move between colors. Once you've found a color you like, hold that spot / angle, and click the joystick as you would a button. Keep your ears open for a themed sound corresponding to that specific color! 
 
-To change the blade's hue, angle the joystick button, give it another click, and you'll be back to "color selection mode". 
+To change the blade's hue, angle the joystick button, give it another click, and you'll have returned to "color selection mode". 
 
 When you're ready to deactivate the lightsaber, simply click the joystick again and watch as the lights recede. Listen closely for a message as you go!
 
@@ -35,7 +35,11 @@ When you're ready to deactivate the lightsaber, simply click the joystick again 
 ## Tools / Tech
 
 1. **C++**: code running on device
-2. **PlatformIO**: embedded development toolset
+2. **Python**: code to play themed sounds
+    - connects via serial monitor
+    - using `playsound` library
+    - with `PyObjC` to run efficiently
+3. **PlatformIO**: embedded development toolset
     - VS Code extension
     - cross-platform, cross-architecture
     - debugger, static analysis, unit testing, etc
