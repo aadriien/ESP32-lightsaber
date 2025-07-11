@@ -1,5 +1,8 @@
+import os
 import serial
 from playsound import playsound
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 # Map color names & event flags to sound file paths 
@@ -46,7 +49,8 @@ def main():
 
         if sound_file:
             print(f"Playing sound for {source}: {sound_file}")
-            playsound(sound_file)
+            full_path = os.path.join(BASE_DIR, sound_file)
+            playsound(full_path)
         else:
             print(f"No sound mapped for {source}")
 
